@@ -3,7 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -24,7 +26,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<!-- 애노테이션 붙은 애들 다 스캔한다 -->
+	<!-- 애노테이션 붙은 애들 다 스캔한다 / 스프링에서 사용 -->
 	<context:component-scan base-package="com.koreait.matzip" />
 	
 	<beans:bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
@@ -48,5 +50,7 @@
     	<beans:property name="configLocation" value="/WEB-INF/spring/mybatis-alias.xml"/>
     </beans:bean>
 	
+	<!-- mybatis에서는 DAO를 bean으로 등록해서 사용한다 : mybatis에서 사용하는 스캐너? mapper 찾는당 -->
+	<mybatis-spring:scan base-package="com.koreait.matzip"/>
 	
 </beans:beans>
