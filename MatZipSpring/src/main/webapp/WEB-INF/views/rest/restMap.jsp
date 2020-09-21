@@ -27,11 +27,30 @@
 		};
 
 		var map = new kakao.maps.Map(mapContainer, options);
-		
-		console.log(map.getCenter())
 
 		function getRestaurantList() {
-			axios.get('/restaurant/ajaxGetList').then(function(res) {
+			const bounds = map.getBounds()
+			const southWest = bounds.getSouthWest()
+			const northEast = bounds.getNorthEast()
+			
+			console.log('southWest : ' + southWest)
+			console.log('northEast : ' + northEast)
+			
+			const sw_lat = southWest.getLat()
+			const sw_lng = southWest.getLng()
+			const ne_lat = northEast.getLat()
+			const ne_lng = northEast.getLng()
+			
+			
+			
+			axios.get('/rest/ajaxGetList',{
+				params: {
+					sw_lat,
+					sw_lng,
+					ne_lat,
+					ne_lng
+				}
+			}).then(function(res) {
 				console.log(res.data)
 				
 				res.data.forEach(function(item) {
@@ -39,7 +58,7 @@
 				})	
 			})
 		}	
-		getRestaurantList()
+		kakao.maps.event.addListener(map, 'dragend', getRestaurantList)
 		
 		function createMarker(item) {
 			var content = document.createElement('div')
