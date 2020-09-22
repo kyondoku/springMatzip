@@ -52,10 +52,15 @@ public class RestController {
 	}
 	
 	@RequestMapping("/detail")
-	public String detail() {
+	public String detail(RestPARAM param, Model model) {
+		RestDMI data = service.selRest(param);
+		model.addAttribute("data", data);
+		model.addAttribute(Const.TITLE, data.getNm()); //가게명
+		model.addAttribute(Const.VIEW, "rest/restDetail");
 		return ViewRef.TEMP_MENU_TEMP;
 	}
-
+	
+	
 	@RequestMapping(value="/ajaxGetList", produces = {"application/json; charset=UTF-8"})
 	@ResponseBody
 	public List<RestDMI> ajaxGetList(RestPARAM param) {
@@ -66,5 +71,6 @@ public class RestController {
 		
 		return service.selRestList(param);
 	}
+	
 	
 }

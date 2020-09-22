@@ -35,6 +35,10 @@ public class RestService {
 		return mapper.insRest(param);
 	}
 	
+	public RestDMI selRest(RestPARAM param) {
+		return mapper.selRest(param);
+	}
+	
 }
 
 

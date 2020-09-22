@@ -25,7 +25,7 @@
 				</c:if>
 			</div>
 		</c:forEach>
-	</div>
+	</div>   
 	<div id="sectionContainerCenter">
 		<div>
 			<c:if test="${loginUser.i_user == data.i_user}">
@@ -59,8 +59,8 @@
 						
 					</div>
 					<div class="status branch_none">
-						<span class="cnt hit">${data.cntHits}</span>
-						<span class="cnt favorite">${data.cntFavorite}</span>
+						<span class="cnt hit">${data.hits}</span>
+						<span class="cnt favorite">${data.cnt_favorite}</span>
 					</div>
 				</div>
 				<div>

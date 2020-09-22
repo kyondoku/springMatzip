@@ -10,8 +10,15 @@ public class RestVO {
 	private String r_dt;
 	private String m_dt;
 	private int cd_category;
+	private int hits;
 	
 	
+	public int getHits() {
+		return hits;
+	}
+	public void setHits(int hits) {
+		this.hits = hits;
+	}
 	public int getI_rest() {
 		return i_rest;
 	}
