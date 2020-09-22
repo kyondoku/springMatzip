@@ -20,15 +20,23 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<div id="mapContainer" style="width:100%; height:100%;"></div>
 	<script>
-
-	const options = {
-			center: new kakao.maps.LatLng(35.866041, 128.593797),
-			level: 5 //지도의 레벨
-		};
+	
+		var markerList = [] //마커 리스트
+		
+		const options = {
+				center: new kakao.maps.LatLng(35.866041, 128.593797),
+				level: 5 //지도의 레벨
+			};
 
 		var map = new kakao.maps.Map(mapContainer, options);
 
 		function getRestaurantList() {
+			//마커 모두 지우기
+			markerList.forEach(function(marker) {
+				marker.setMap(null)
+			})
+			
+			
 			const bounds = map.getBounds()
 			const southWest = bounds.getSouthWest()
 			const northEast = bounds.getNorthEast()
@@ -58,7 +66,7 @@
 				})	
 			})
 		}	
-		kakao.maps.event.addListener(map, 'dragend', getRestaurantList)
+		kakao.maps.event.addListener(map, 'tilesloaded', getRestaurantList)
 		
 		function createMarker(item) {
 			var content = document.createElement('div')
@@ -96,10 +104,12 @@
 			})
 			
 			marker.setMap(map)
+			
+			markerList.push(marker)
 		}
 		
 		function moveToDetail(i_rest) {
-			location.href = '/restaurant/restDetail?i_rest=' + i_rest
+			location.href = '/rest/detail?i_rest=' + i_rest
 		}
 		
 		function addEvent(target, type, callback) {
