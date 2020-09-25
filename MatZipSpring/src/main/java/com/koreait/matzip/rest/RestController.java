@@ -7,10 +7,10 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -18,6 +18,7 @@ import com.koreait.matzip.Const;
 import com.koreait.matzip.SecurityUtils;
 import com.koreait.matzip.ViewRef;
 import com.koreait.matzip.rest.model.RestDMI;
+import com.koreait.matzip.rest.model.RestFile;
 import com.koreait.matzip.rest.model.RestPARAM;
 import com.koreait.matzip.rest.model.RestRecMenuVO;
 
@@ -58,7 +59,8 @@ public class RestController {
 	public String detail(RestPARAM param, Model model, HttpSession hs) {
 		RestDMI data = service.selRest(param);
 		
-		model.addAttribute("css", new String[]{"common", "restDetail"});
+		//model.addAttribute("menuList", service.selRestMenus(param));
+		model.addAttribute("css", new String[]{"common", "restDetail", "swiper-bundle.min"});
 		model.addAttribute("recMenuList", service.selRestRecMenus(param));
 		model.addAttribute("data", data);
 		model.addAttribute(Const.TITLE, data.getNm()); //가게명
@@ -66,6 +68,13 @@ public class RestController {
 		return ViewRef.TEMP_MENU_TEMP;
 	}
 
+	@RequestMapping("/ajaxSelMenuList")
+	@ResponseBody
+	public List<RestRecMenuVO> ajaxSelMenuList(RestPARAM param) {
+		return service.selRestMenus(param);
+	}
+	
+	
 	@RequestMapping("/del")
 	public String del(RestPARAM param, HttpSession hs) {
 		int loginI_user = SecurityUtils.getLoginUserPk(hs);
@@ -93,7 +102,6 @@ public class RestController {
 	}
 	
 	
-	
 	@RequestMapping(value="/ajaxGetList", produces = {"application/json; charset=UTF-8"})
 	@ResponseBody
 	public List<RestDMI> ajaxGetList(RestPARAM param) {
@@ -110,8 +118,29 @@ public class RestController {
 		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu/";
 		String realPath = hs.getServletContext().getRealPath(path);
 		param.setI_user(SecurityUtils.getLoginUserPk(hs)); //로그인 유저 pk담기
-		return service.delRecMenu(param, path);
+		return service.delRestRecMenu(param, realPath);
 	}
+	
+	@RequestMapping("/ajaxDelMenu")
+	@ResponseBody public int ajaxDelMenu(RestPARAM param) { //i_rest, seq, menu_pic 담겨있음
+		return service.delRestMenu(param);
+	}
+	
+	@RequestMapping("/menus")
+	public String menus(@ModelAttribute RestFile param
+			, HttpSession hs
+			, RedirectAttributes ra) {
+
+		int i_user = SecurityUtils.getLoginUserPk(hs);
+		int result = service.insRestMenu(param, i_user);
+		ra.addAttribute("i_rest", param.getI_rest());
+		return "redirect:/rest/detail";
+	}
+	
+//	@RequestMapping("/ajaxGetMenus")
+//	@ResponseBody public List<RestRecMenuVO> ajaxGetMenus(RestPARAM param) {
+//		return service.getRestMenus(param);
+//	}
 	
 	
 }

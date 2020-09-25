@@ -13,6 +13,19 @@ html, body {
 	height: 100%;
 }
 
+a {
+	color: black;
+	text-decoration: none;
+}
+
+.ml5 { margin-left: 5px; }
+.ml10 { margin-left: 10px; }
+.ml15 { margin-left: 15px; }
+
+.bg_black {
+	background-color: #000;
+}
+
 #container {
 	display: flex;
 	flex-direction: column;
@@ -20,24 +33,25 @@ html, body {
 	height: 100%;
 }
 
-#container > header {
+#container > header {	
 	background-color: #a29bfe;
 	display: flex;
 	height: 70px;
 	padding: 10px;
 }
+
 #container > header > #headerLeft {
 	flex-grow: 1;
 	display: flex;
-	align-items: center;	
+	align-items: center;
 }
 
 #container > header > #headerLeft > #headerLogout > a {
 	color: blue;
-}	
+}
 
 #container > header > #headerRight {
-	padding-right: 20px;
+	padding-right: 50px;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -45,19 +59,20 @@ html, body {
 }
 
 #container > header > #headerRight > a {
-	font-size: 1.2em;
 	font-weight: bold;
+	font-size: 1.4em;
 }
 
 #container > section {
 	flex-grow: 1;
+	overflow: scroll;
 }
 
 #container > footer {
 	align-items: center;
 	background-color: #636e72;
 	color: white;
-	display: flex;
+	display:flex;
 	height: 50px;
 	justify-content: center;
 	padding: 10px;
@@ -78,27 +93,16 @@ html, body {
 
 .msg { color: red; }
 
-.pImg {
+ .containerPImg {
+	display: inline-block;	
 	width: 30px;
 	height: 30px;
-	border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
-a {
-	color: black;
-	text-decoration: none;
+.pImg {
+	object-fit: cover;
+	height: 100%;
+	width: 100%;
 }
-
-.ml5 { margin-left: 5px; }
-.ml15 { margin-left: 15px; }
-
-
-
-
-
-
-
-
-
-
-
