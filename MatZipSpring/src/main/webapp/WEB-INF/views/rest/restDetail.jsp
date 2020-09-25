@@ -93,85 +93,89 @@
 </div>
 <div id="carouselContainer">
 	<div id="imgContainer">
-		<!-- Slider main container -->
-<div class="swiper-container">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper">
-        <!-- Slides -->
-        <div class="swiper-slide">Slide 1</div>
-        <div class="swiper-slide">Slide 2</div>
-        <div class="swiper-slide">Slide 3</div>
-        ...
-    </div>
-    <!-- If we need pagination -->
-    <div class="swiper-pagination"></div>
-
-    <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-
-    <!-- If we need scrollbar -->
-    <!-- <div class="swiper-scrollbar"></div> -->
-</div>
+		<div class="swiper-container">
+			<div id="swiperWrapper" class="swiper-wrapper">
+			</div>
+			<!-- If we need pagination -->
+			<div class="swiper-pagination"></div>
+			
+			<!-- If we need navigation buttons -->
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+		</div>
 	</div>
-	<div>
-		<span class="material-icons">clear</span>
-	</div>
+	<span class="material-icons" onclick="closeCarousel()">clear</span>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+	function closeCarousel() {
+		carouselContainer.style.opacity = 0
+		carouselContainer.style.zIndex = -10
+	}
+	
+	function openCarousel() {
+		carouselContainer.style.opacity = 1
+		carouselContainer.style.zIndex = 40
+	}
 	var mySwiper = new Swiper('.swiper-container', {
-	  // Optional parameters
-	  direction: 'horizontal',
-	  loop: true,
-
-	  // If we need pagination
-	  pagination: {
-	    el: '.swiper-pagination',
-	  },
-
-	  // Navigation arrows
-	  navigation: {
-	    nextEl: '.swiper-button-next',
-	    prevEl: '.swiper-button-prev',
-	  },
-
-	  // And if we need scrollbar
-	  scrollbar: {
-	    el: '.swiper-scrollbar',
-	  },
-	})
+			  // Optional parameters
+			  direction: 'horizontal',
+			  loop: false,
+			
+			  // If we need pagination
+			  pagination: {
+			    el: '.swiper-pagination',
+			  },
+			
+			  // Navigation arrows
+			  navigation: {
+			    nextEl: '.swiper-button-next',
+			    prevEl: '.swiper-button-prev',
+			  }
+			})
 
 	var menuList = []
-	
 	function ajaxSelMenuList() {
 		axios.get('/rest/ajaxSelMenuList', {
 			params: {
 				i_rest: ${data.i_rest}
 			}
-		}).then(function(res) { //then -> 응답이 왔다면
+		}).then(function(res) {
 			menuList = res.data
 			refreshMenu()
-		}) 
+		})
 	}
 	
 	function refreshMenu() {
 		conMenuList.innerHTML = ''
+		swiperWrapper.innerHTML = ''
+		
 		menuList.forEach(function(item, idx) {
 			makeMenuItem(item, idx)
 		})
 	}
-
+	
 	function makeMenuItem(item, idx) {
 		const div = document.createElement('div')
 		div.setAttribute('class', 'menuItem')
-
+				
 		const img = document.createElement('img')
 		img.setAttribute('src', `/res/img/rest/${data.i_rest}/menu/\${item.menu_pic}`)
+		img.style.cursor = 'pointer'
+		img.addEventListener('click', openCarousel)
+		
+		const swiperDiv = document.createElement('div')
+		swiperDiv.setAttribute('class', 'swiper-slide')
+		
+		const swiperImg = document.createElement('img')
+		swiperImg.setAttribute('src', `/res/img/rest/${data.i_rest}/menu/\${item.menu_pic}`);
+		
+		swiperDiv.append(swiperImg)
+		mySwiper.appendSlide(swiperDiv)
 		
 		div.append(img)
-	
 		<c:if test="${loginUser.i_user == data.i_user}">
 			const delDiv = document.createElement('div')
 			delDiv.setAttribute('class', 'delIconContainer')
@@ -191,7 +195,7 @@
 						} else {
 							alert('메뉴를 삭제할 수 없습니다.')
 						}
-					})
+					})	
 				}
 			})
 			
@@ -204,53 +208,51 @@
 		</c:if>
 			
 		conMenuList.append(div)
-	}	
-	
-	
-	
-	
-	<c:if test="${loginUser.i_user == data.i_user }">
+	}
+	<c:if test="${loginUser.i_user == data.i_user}">
 	function delRecMenu(seq) {
-		if(!confirm('삭제 하시겠습니까?')) {
+		if(!confirm('삭제하시겠습니까?')) {
 			return
-		}
+		}	
+		console.log('seq : ' + seq)
+		
 		axios.get('/rest/ajaxDelRecMenu', {
-				params: {
-					i_rest: ${data.i_rest},
-					seq: seq
-				}	
+			params: {
+				i_rest: ${data.i_rest},
+				seq: seq
+			}
 		}).then(function(res) {
 			console.log(res)
 			if(res.data == 1) {
-				//엘리멘트 삭제
+				//엘리먼트 삭제
 				var ele = document.querySelector('#recMenuItem_' + seq)
 				ele.remove()
 			}
 		})
 	}
 	
-	var idx = 0;	
+	var idx = 0;
 	function addRecMenu() {
 		var div = document.createElement('div')
 		div.setAttribute('id', 'recMenu_' + idx++)
 		
 		var inputNm = document.createElement('input')
-		inputNm.setAttribute('type', 'text');
-		inputNm.setAttribute('name', 'menu_nm');
+		inputNm.setAttribute('type', 'text')
+		inputNm.setAttribute('name', 'menu_nm')
 		var inputPrice = document.createElement('input')
-		inputPrice.setAttribute('type', 'number');
-		inputPrice.setAttribute('name', 'menu_price');
+		inputPrice.setAttribute('type', 'number')
+		inputPrice.setAttribute('name', 'menu_price')
 		inputPrice.value = '0'
 		var inputPic = document.createElement('input')
-		inputPic.setAttribute('type', 'file');
-		inputPic.setAttribute('name', 'menu_pic');
-		var delBtn = document.createElement('input')		
+		inputPic.setAttribute('type', 'file')
+		inputPic.setAttribute('name', 'menu_pic')
+		var delBtn = document.createElement('input')
 		delBtn.setAttribute('type', 'button')
-		delBtn.setAttribute('value', 'X')
+		delBtn.setAttribute('value', 'X')		
 		delBtn.addEventListener('click', function() {
 			div.remove()
-		})
-		div.append(' 메뉴: ')
+		})		
+		div.append('메뉴: ')
 		div.append(inputNm)
 		div.append(' 가격: ')
 		div.append(inputPrice)
@@ -260,74 +262,15 @@
 		
 		recItem.append(div)
 	}
-	
 	function isDel() {
 		if(confirm('삭제 하시겠습니까?')) {
 			location.href = '/rest/del?i_rest=${data.i_rest}'
-		}		
+		}
 	}
 	addRecMenu()
 	
 	</c:if>
+
 	ajaxSelMenuList()
 	
-/* 	function getMenus() {
-		axios.get('/rest/ajaxGetMenus', {
-			params: {
-				i_rest: ${data.i_rest}
-			}
-		}).then(function(res) {
-			console.log(res)
-			if(res.data.length > 0) {
-				res.data.forEach(function(item) {
-					addMenu(item)
-				})
-			}
-		})
-	}
-	getMenus()  
-	
-	function addMenu(item) {
-		var div = document.createElement('div')
-		div.setAttribute('class', 'menuItem');
-		
-		var img = document.createElement('img')
-		img.setAttribute('src', `/res/img/rest/\${item.i_rest}/menu/\${item.menu_pic}`)
-		
-		div.append(img)
-		
-		<c:if test="${loginUser.i_user == data.i_user }">
-			var delDiv = document.createElement('div')
-			delDiv.setAttribute('class', 'delIconContainer');
-			delDiv.addEventListener('click', funcion() {
-				if(confirm('삭제 하시겠습니까?')) {
-					axios.get('/rest/ajaxDelMenu', {
-						params: {
-							i_rest: ${data.i_rest},
-							seq: item.seq
-						}
-					}).then(function(res) {
-						console.log(res)
-						if(res.data == 1) {
-							//엘리멘트 삭제
-							div.remove()
-						}
-					})
-				}
-			})
-			
-			var span = document.createElement('span')
-			span.setAttribute('class', 'material-icons')
-			span.innerText = 'clear'
-			
-			delDiv.append(span)
-			
-			div.append(delDiv)
-		</c:if>
-			
-		
-		idMenuList.append(div)
-	}
-	*/
 </script>
-	
