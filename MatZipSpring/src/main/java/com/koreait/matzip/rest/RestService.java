@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.koreait.matzip.CommonUtils;
 import com.koreait.matzip.Const;
 import com.koreait.matzip.FileUtils;
+import com.koreait.matzip.SecurityUtils;
 import com.koreait.matzip.model.CodeVO;
 import com.koreait.matzip.model.CommonMapper;
 import com.koreait.matzip.rest.model.RestDMI;
@@ -87,6 +91,29 @@ public class RestService {
 		return i_rest;	
 	}
 	
+	public void updAddHits(RestPARAM param, HttpServletRequest req) {
+		
+		
+		System.out.println("ㅡㅡ왜 안 올려줘");
+		String myIp = req.getRemoteAddr();
+		ServletContext ctx = req.getServletContext();		
+
+		int i_user = SecurityUtils.getLoginUserPk(req);
+		
+		String currentRestReadIp = (String)ctx.getAttribute(Const.CURRENT_REST_READ_IP + param.getI_rest());
+		if(currentRestReadIp == null || !currentRestReadIp.equals(myIp)) {
+			
+			param.setI_user(i_user); // 내가 쓴 글이면 조회수 안 올라가게 쿼리문으로 막는다.
+			//조회수 올림 처리 할꺼임
+			System.out.println("ㅡㅡ왜 안 올려줘2222222222222");
+			System.out.println("i_rest : " + param.getI_rest());
+			System.out.println("i_user : " + param.getI_user());
+			mapper.updAddHits(param);
+			System.out.println("ㅡㅡ왜 안 올려줘333333333333333");
+			ctx.setAttribute(Const.CURRENT_REST_READ_IP + param.getI_rest(), myIp);
+		}
+	}
+	
 	public RestDMI selRest(RestPARAM param) {
 		return mapper.selRest(param);
 	}
@@ -157,7 +184,7 @@ public class RestService {
 		
 		return Const.SUCCESS;
 	}
-	
+
 //	public List<RestRecMenuVO> getRestMenus(RestPARAM param) {
 //		return mapper.getRestMenus(param);
 //	}

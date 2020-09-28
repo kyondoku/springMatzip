@@ -36,6 +36,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 					return false;
 				}
 			}
+	
 		case ViewRef.URI_REST :
 			switch(uriArr[2]) {
 			case "reg" :
