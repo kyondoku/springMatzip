@@ -34,7 +34,7 @@ a {
 }
 
 #container > header {	
-	background-color: #a29bfe;
+	background-color: #ffd0d0;
 	display: flex;
 	height: 70px;
 	padding: 10px;
@@ -46,8 +46,11 @@ a {
 	align-items: center;
 }
 
-#container > header > #headerLeft > #headerLogout > a {
-	color: blue;
+#container > header > #headerLeft > #headerLogout > a > button {
+	background: none;
+	font-family: 'Noto Sans KR', sans-serif;
+	color: black;
+	border: 2px solid black;
 }
 
 #container > header > #headerRight {

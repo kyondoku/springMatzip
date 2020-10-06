@@ -8,7 +8,7 @@
 <title>${title}</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/res/css/common.css">
+<link rel="stylesheet" type="text/css" href="/res/css/common.css?ver=1">
 <c:forEach items="${css}" var="item">
 	<link rel="stylesheet" type="text/css" href="/res/css/${item}.css">
 </c:forEach>
@@ -28,8 +28,12 @@
 							</c:otherwise>
 						</c:choose>
 					</div>
-					<div class="ml5">${loginUser.nm }님 환영합니다.</div>
-					<div class="ml10" id="headerLogout"><a href="/user/logout">로그아웃</a></div>
+					<div class="ml5">${loginUser.nm }님 환영합니다!</div>
+					<div class="ml10" id="headerLogout">
+						<a href="/user/logout">
+							<button>로그아웃</button>
+						</a>
+					</div>
 				</c:if>
 				<c:if test="${loginUser == null }">
 					<div class="ml10" id="headerLogout"><a href="/user/login">로그인</a></div>
